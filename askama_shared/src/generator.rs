@@ -1722,7 +1722,10 @@ impl MapChain<'_, &str, LocalMeta> {
 
     fn resolve_or_self(&self, name: &str) -> String {
         self.resolve(name)
-            .unwrap_or_else(|| format!("self.{}", name))
+            .unwrap_or_else(|| match name.chars().any(char::is_uppercase) {
+                true => name.to_string(),
+                false => format!("self.{}", name),
+            })
     }
 }
 
